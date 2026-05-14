@@ -4,7 +4,7 @@
 
 > ⚠️ **仅适用于 Claude Code 桌面端导出的会话**
 >
-> 本工具只识别 Claude Code **桌面端**（即 claude.ai 网页/桌面应用的 Cowork、Code 两类会话）通过类似 `claude-old-cli` 等导出工具落地为 Markdown 后的目录结构。
+> 本工具只识别 Claude Code **桌面端**（即 claude.ai 网页/桌面应用的 Cowork、Code 两类会话）通过类似 `[comoysha/claude-old](https://github.com/comoysha/claude-old)` 等导出工具落地为 Markdown 后的目录结构。
 >
 > **不适用于** 以下场景：
 > - Claude Code CLI（`~/.claude/projects/...` 下的 `.jsonl` 原始会话日志）
