@@ -48,6 +48,8 @@ Session 文件名格式：`YYYY-MM-DD <8位短ID> <标题>.md`。文件内容应
 
 依赖：Node.js 18+，仅需一个 npm 包（`express`）。
 
+### 方式 A：一次性使用（前台运行）
+
 ```bash
 npm install
 cp config.example.json config.json
@@ -55,7 +57,27 @@ cp config.example.json config.json
 npm start
 ```
 
-默认监听 `http://localhost:5273`。
+默认监听 `http://localhost:5273`。如果端口被占，会自动 +1 直到找到空端口（启动日志里有实际 URL）。
+
+### 方式 B：常驻后台（macOS LaunchAgent，开机/登录自启）
+
+仓库自带 `init.sh` 一键安装：
+
+```bash
+./init.sh              # 装 + 起（首次会自动生成 config.json 并提示你编辑）
+./init.sh status       # 查看当前进程 / 端口 / 最新日志
+./init.sh uninstall    # 停服 + 删 plist
+```
+
+脚本会：
+1. `npm install`
+2. 没有 `config.json` 就从 `config.example.json` 复制一份并提示编辑（确认 `sources` 不再是占位路径才会继续）
+3. 自动探测 `node` 路径（兼容 Intel `/usr/local/bin/node` 和 Apple Silicon `/opt/homebrew/bin/node`）
+4. 生成 `~/Library/LaunchAgents/local.claude-account-export-view.plist`
+5. `launchctl bootstrap` 加载，`RunAtLoad=true` + `KeepAlive=true`，崩了自动拉起
+6. 日志输出到 `~/Library/Logs/claude-account-export-view/{out,err}.log`
+
+> ⚠️ **仅 macOS**。Linux 用户请改用 systemd user unit；Windows 用户请用 Task Scheduler 或 NSSM。脚本会自动拒绝在非 macOS 上运行。
 
 ### 配置
 
@@ -77,16 +99,6 @@ npm start
 node server.js --port 6000 --dir /path/to/single/source
 COWORK_DIR=/path/to/source node server.js
 ```
-
-## macOS 后台常驻（可选）
-
-把它做成登录自启的 LaunchAgent：
-
-1. 写 `~/Library/LaunchAgents/com.<you>.claude-account-export-view.plist`，`ProgramArguments` 指向 `node` + `server.js`，开启 `RunAtLoad` 与 `KeepAlive`
-2. `launchctl load -w ~/Library/LaunchAgents/com.<you>.claude-account-export-view.plist`
-3. 浏览器访问 `http://localhost:5273`
-
-具体 plist 可参考社区上 LaunchAgent + Node 服务的常见模板。
 
 ## API（仅本地使用）
 
