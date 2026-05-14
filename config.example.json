@@ -1,0 +1,7 @@
+{
+  "port": 5273,
+  "sources": [
+    { "name": "cowork", "dir": "/absolute/path/to/claude-account-export/cowork" },
+    { "name": "code",   "dir": "/absolute/path/to/claude-account-export/code" }
+  ]
+}

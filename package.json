@@ -1,0 +1,13 @@
+{
+  "name": "claude-account-export-view",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local web viewer for claude desktop local sessions (cowork and code)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
