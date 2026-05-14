@@ -68,6 +68,7 @@ cmd_install() {
   ( cd "$REPO_DIR" && npm install --silent --no-audit --no-fund )
 
   mkdir -p "$LOG_DIR"
+  mkdir -p "$(dirname "$PLIST")"
 
   log "writing $PLIST"
   cat > "$PLIST" <<PLIST_EOF
