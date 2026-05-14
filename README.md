@@ -112,11 +112,6 @@ COWORK_DIR=/path/to/source node server.js
 
 服务**只绑定本地、无鉴权**，请勿暴露到公网。
 
-## 隐私提示
-
-- 你的导出 Markdown 里可能包含敏感对话内容。请勿把数据目录（`config.json` 里的 `sources`）放到公开仓库中。
-- 本仓库默认 `.gitignore` 已忽略 `config.json` 与常见 IDE/系统目录。
-
 ## License
 
 MIT
