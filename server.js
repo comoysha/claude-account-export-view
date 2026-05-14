@@ -120,11 +120,24 @@ app.get('/api/search', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(PORT, () => {
-  const projects = scanAll(SOURCES);
-  const totalSessions = projects.reduce((acc, p) => acc + p.sessionCount, 0);
-  console.log(`[cowork-view] sources:`);
-  for (const s of SOURCES) console.log(`  - ${s.name} -> ${s.dir}`);
-  console.log(`[cowork-view] projects = ${projects.length}, sessions = ${totalSessions}`);
-  console.log(`[cowork-view] listening on http://localhost:${PORT}`);
-});
+function listen(port, retries = 10) {
+  const server = app.listen(port, () => {
+    const actual = server.address().port;
+    const projects = scanAll(SOURCES);
+    const totalSessions = projects.reduce((acc, p) => acc + p.sessionCount, 0);
+    console.log(`[cowork-view] sources:`);
+    for (const s of SOURCES) console.log(`  - ${s.name} -> ${s.dir}`);
+    console.log(`[cowork-view] projects = ${projects.length}, sessions = ${totalSessions}`);
+    console.log(`[cowork-view] listening on http://localhost:${actual}`);
+  });
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE' && retries > 0) {
+      console.warn(`[warn] port ${port} in use, trying ${port + 1}`);
+      setTimeout(() => listen(port + 1, retries - 1), 50);
+    } else {
+      console.error(`[fatal] listen failed: ${e.message}`);
+      process.exit(1);
+    }
+  });
+}
+listen(PORT);
